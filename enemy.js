@@ -1,7 +1,7 @@
 function Enemy(ctx, x, y, w, h) {
   
-  this.width = 90,
-  this.height = 75,
+  this.width = 100,
+  this.height = 120,
 
   this.posY = Math.random()*700,
   this.posX = x,
@@ -9,7 +9,7 @@ function Enemy(ctx, x, y, w, h) {
   this.ctx = ctx,
 
   this.enemy = new Image(),
-  this.enemy.src = ("img/gorro.png")
+  this.enemy.src = ("img/enemy.png")
 
 }
 

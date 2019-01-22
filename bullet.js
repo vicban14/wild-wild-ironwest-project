@@ -3,7 +3,8 @@ function Bullet(ctx, x, y, w, h) {
   this.posX = x,
   this.posY = y,
 
-  this.height = h,
+  this.height = 5,
+  this.width = 5,
 
   this.r = 5,
 

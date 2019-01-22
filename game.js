@@ -51,13 +51,19 @@ var Game = {
   },
 
   clearEnemies: function () {
-      console.log(player)
-        for (var b = 0; b < Player.bullets.length; b++){
+      
+        for (var b = 0; b < this.player.bullets.length; b++){
           for (var e = 0; e < this.groupEnemies.length; e++){
-            if(bullets[b].posX + bullets[b].width > groupEnemies[e].posX && groupEnemies[e].posX + groupEnemies[e].width > bullets[b].posX && bullets[b].posY + bullets[b].height > groupEnemies[e].posY && groupEnemies[e].posY + groupEnemies[e].height > bullets[b].posY){
-              groupEnemies.splice[e, 1];
-              player.bullets.splice[b, 1];
-            }
+            if (this.player.bullets[b].posX < this.groupEnemies[e].posX + this.groupEnemies[e].width &&
+              this.player.bullets[b].posX + this.player.bullets[b].width > this.groupEnemies[e].posX &&
+              this.player.bullets[b].posY < this.groupEnemies[e].posY + this.groupEnemies[e].height &&
+              this.player.bullets[b].height + this.player.bullets[b].posY > this.groupEnemies[e].posY) {
+               console.log("hit!!")
+              this.groupEnemies.splice(e, 1);
+              this.player.bullets.splice(b, 1);
+          }
+              
+
           }
         }
         this.groupEnemies = this.groupEnemies.filter(function (enemy) {
@@ -73,10 +79,6 @@ var Game = {
         Game.drawEnemy();
         Game.clearEnemies();
         
-        
-
-      // this.player.bullets.forEach(function(bullet){
-      // })
 
 
         this.framesCounter++;
