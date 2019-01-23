@@ -103,9 +103,13 @@ var Game = {
               if (type === 1){
                 this.player.functionDrunk()
               }
-              // if (type === 2){
-              //   this.player.liveUp()
-              // }
+              if (type === 2){
+                this.player.counterLife++;
+                this.player.heart.frameIndex--;
+              }
+              if (type === 3){
+                this.scoreBoard.score += 10;
+              }
               this.groupWeapons.splice(keyarg2, 1)
             }
             
@@ -170,13 +174,12 @@ var Game = {
 
     //todo: consider adding config variables to avoid values like 200
     //   if (this.framesCounter % GameConfig.framesUpdateLimit === 0) { instead of    if (this.framesCounter % 200 === 0) {
-    if (this.framesCounter % 200 === 0) {
+    if (this.framesCounter % 100 === 0) {
       this.createEnemy(1400, 700);
     }
 
-    if (this.framesCounter % 100 === 0) {
+    if (this.framesCounter % 700 === 0) {
       this.createNewWeapon();
-
     }
 
   

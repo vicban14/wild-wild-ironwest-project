@@ -1,4 +1,4 @@
-function EnemyBullet(ctx, x, y, w, h) {
+function EnemyBullet(ctx, x, y) {
 
   this.posX = x,
   this.posY = y,

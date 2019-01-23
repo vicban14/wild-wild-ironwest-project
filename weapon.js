@@ -1,5 +1,5 @@
 //todo: avoid unused variables and/or parameters
-function Weapon(ctx, x, y, w, h) {
+function Weapon(ctx) {
     this.width = 50,
     this.height = 50,
     this.posX = Math.random() * 800,
@@ -15,14 +15,19 @@ function Weapon(ctx, x, y, w, h) {
 
 Weapon.prototype.chooseImageWeapon = function() {
 
-  this.effect = Math.floor(Math.random() * 2)
+  this.effect = Math.floor(Math.random() * 4)
+  console.log(this.effect)
 
   if (this.effect === 0) {
     this.weaponImg.src = "img/clipart1815275.png"
   } else if (this.effect === 1){
-    this.weaponImg.src = "img/whiskey-bottle.png"
+    this.weaponImg.src = "img/whiskey-bottle2.png"
+    this.width = 35;
+    this.height = 70;
   } else if (this.effect === 2){
     this.weaponImg.src = "img/coeur-pixel.png"
+  } else {
+    this.weaponImg.src = "img/coin.png"
   }
 }
 

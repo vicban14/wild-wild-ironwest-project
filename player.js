@@ -1,5 +1,5 @@
 //todo: avoid unused variables and/or parameters
-function Player(ctx, x, y, w, h) {
+function Player(ctx) {
 
   this.width = 100,
   this.height = 120,

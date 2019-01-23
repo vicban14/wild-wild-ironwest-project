@@ -1,5 +1,5 @@
 //todo: avoid unused variables and/or parameters
-function Enemy(ctx, x, y) {
+function Enemy(ctx, x) {
   
   this.width = 100,
   this.height = 120,

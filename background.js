@@ -1,5 +1,5 @@
 //todo: avoid unused variables and/or parameters
-function Background(ctx, x, y, w, h) {
+function Background(ctx) {
 
   this.width = 1600,
   this.height = 800,

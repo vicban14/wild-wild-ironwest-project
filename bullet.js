@@ -1,4 +1,4 @@
-function Bullet(ctx, x, y, w, h) {
+function Bullet(ctx, x, y) {
 
   this.posX = x,
   this.posY = y,
