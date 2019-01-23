@@ -2,7 +2,7 @@ var Game = {
   canvas: undefined,
   ctx: undefined,
   fps: 60,
-  scoreBoard: 0,
+  scoreBoard: ScoreBoard,
   groupEnemies: [],
   player: undefined,
   background: undefined,
@@ -63,6 +63,10 @@ var Game = {
     })
   },
 
+  drawCounterLife: function (){
+    this.player.drawLife()
+  },
+
   // consider using object literals for strings that are used in several places or often
   // CollisionTypes = {
   //   bulletEnemy : "bullet-enemy",
@@ -81,10 +85,12 @@ var Game = {
             if (type === "bullet-enemy"){
               this.player.bullets.splice(keyarg1, 1);
               this.groupEnemies.splice(keyarg2, 1);
+              this.scoreBoard.score++
 
             } else if (type === "bullet-player"){
               this.groupEnemies[index].enemyBullets.splice(keyarg2, 1);
               this.player.counterLife--;
+              this.player.heart.frameIndex++;
 
                 if (this.player.counterLife === 0){
                   delete this.player;
@@ -131,6 +137,8 @@ var Game = {
         this.drawWeapons();
         this.clearEnemies();
         this.clearBullets();
+        this.drawCounterLife();
+        this.scoreBoard.update(this.ctx)
         this.player.bullets.forEach(function(bullet, bulletKey) {
           this.groupEnemies.forEach(function(enemy, enemyKey){
             Game.collision(bullet, enemy, bulletKey, enemyKey, "bullet-enemy")

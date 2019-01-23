@@ -23,6 +23,10 @@ function Player(ctx, x, y, w, h) {
 
   this.counterLife = 3;
   
+  this.heart = new Image();
+  this.heart.src = ("img/lifeCounter.png");
+  this.heart.frames = 3;
+  this.heart.frameIndex = 0;
 };
   
   Player.prototype.draw = function() {
@@ -32,6 +36,23 @@ function Player(ctx, x, y, w, h) {
       bullet.draw();
       bullet.move();
     });
+    console.log(this.drawLife)
+    this.drawLife();
+    
+  }
+
+  Player.prototype.drawLife = function(){
+    this.ctx.drawImage(
+      this.heart,
+      0,
+      this.heart.frameIndex * Math.floor(this.heart.height / this.heart.frames),
+      this.heart.width,
+      this.heart.height / this.heart.frames,
+      20,
+      20,
+      100,
+      40
+      )
   }
 
   Player.prototype.functionDrunk = function() {

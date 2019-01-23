@@ -1,8 +1,10 @@
 var ScoreBoard = {
-  update: function (score, ctx) {
-      ctx.font = "30px sans-serif";
-      ctx.fillStyle = "green";
-      //todo: please avoid hardcoded values
-      ctx.fillText(Math.floor(score), 50, 50);
+  score: 0,
+  update: function (ctx) {
+      ctx.font = "50px sans-serif";
+      ctx.fillStyle = "black";
+      ctx.fillText(Math.floor(this.score), innerWidth/2 + 70, 70);
+
+      ctx.fillText("Score: ", innerWidth/2 - 100, 70);
   }
-};
+}
