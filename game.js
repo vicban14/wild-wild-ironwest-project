@@ -1,13 +1,15 @@
-
 var Game = {
   canvas: undefined,
   ctx: undefined,
   fps: 60,
-  scoreBoard: undefined,
+  scoreBoard: 0,
   groupEnemies: [],
   player: undefined,
   background: undefined,
   framesCounter: 0,
+  weapon: undefined,
+  groupWeapons: [],
+
 
   start: function (canvadId) {
 
@@ -17,9 +19,8 @@ var Game = {
 
     this.player = new Player(this.ctx);
 
-    this.createBackground()
-
-    
+    this.createBackground();
+    this.createNewWeapon();
 
     // this.score += 10
 
@@ -36,6 +37,12 @@ var Game = {
     this.background = new Background(this.ctx);
   },
 
+  createNewWeapon: function() {
+    this.groupWeapons.push(new Weapon(this.ctx))
+  },
+
+  //todo: consider removing functions not adding extra value to the code
+  //call this.background.draw() instead of drawBackground as it adds no extra value
   drawBackground: function(){
       this.background.draw()
   },
@@ -50,35 +57,101 @@ var Game = {
     })
   },
 
-  clearEnemies: function () {
-      
-        for (var b = 0; b < this.player.bullets.length; b++){
-          for (var e = 0; e < this.groupEnemies.length; e++){
-            if (this.player.bullets[b].posX < this.groupEnemies[e].posX + this.groupEnemies[e].width &&
-              this.player.bullets[b].posX + this.player.bullets[b].width > this.groupEnemies[e].posX &&
-              this.player.bullets[b].posY < this.groupEnemies[e].posY + this.groupEnemies[e].height &&
-              this.player.bullets[b].height + this.player.bullets[b].posY > this.groupEnemies[e].posY) {
-               console.log("hit!!")
-              this.groupEnemies.splice(e, 1);
-              this.player.bullets.splice(b, 1);
-          }
-              
+  drawWeapons: function (){
+    this.groupWeapons.forEach(function(weapon, i){
+      weapon.draw();
+    })
+  },
+
+  // consider using object literals for strings that are used in several places or often
+  // CollisionTypes = {
+  //   bulletEnemy : "bullet-enemy",
+  //   bulletPlayer : "bullet-player"
+  // }
+
+  //todo: consider adding meaningful parameter to every function
+  collision: function(arg1,arg2, keyarg1, keyarg2, type, index){
+
+        if (arg1.posX < arg2.posX + arg2.width &&
+            arg1.posX + arg1.width > arg2.posX &&
+            arg1.posY < arg2.posY + arg2.height &&
+            arg1.height + arg1.posY > arg2.posY) {
+            
+            //todo: consider using here an object literal as in CollisionTypes.bulletEnemy
+            if (type === "bullet-enemy"){
+              this.player.bullets.splice(keyarg1, 1);
+              this.groupEnemies.splice(keyarg2, 1);
+
+            } else if (type === "bullet-player"){
+              this.groupEnemies[index].enemyBullets.splice(keyarg2, 1);
+              this.player.counterLife--;
+
+                if (this.player.counterLife === 0){
+                  delete this.player;
+              }
+            
+            } else {
+              if (type === 0){
+                this.groupEnemies = [];
+              }
+              if (type === 1){
+                this.player.functionDrunk()
+              }
+              // if (type === 2){
+              //   this.player.liveUp()
+              // }
+              this.groupWeapons.splice(keyarg2, 1)
+            }
+            
 
           }
-        }
+  },
+  
+  
+  
+
+  clearEnemies: function () {
         this.groupEnemies = this.groupEnemies.filter(function (enemy) {
-        return enemy.posX > 0;
+          return enemy.posX > 0;
     });
+},
+
+  clearBullets: function(){
+    this.player.bullets = this.player.bullets.filter(function (bullet) {
+    return bullet.posX < 1600;
+      })
   },
 
   repeat: function (){
     var IntervalID = setInterval(()=>{
       this.ctx.clearRect(0,0,1600,800);
-        Game.drawBackground();
-        Game.drawPlayer();
-        Game.drawEnemy();
-        Game.clearEnemies();
-        
+        this.drawBackground();
+        this.drawPlayer();
+        this.drawEnemy();
+        this.drawWeapons();
+        this.clearEnemies();
+        this.clearBullets();
+        this.player.bullets.forEach(function(bullet, bulletKey) {
+          this.groupEnemies.forEach(function(enemy, enemyKey){
+            Game.collision(bullet, enemy, bulletKey, enemyKey, "bullet-enemy")
+          })
+        }.bind(this));
+  
+          this.groupWeapons.forEach(function(weapon, weaponKey){
+            this.collision(this.player, weapon, undefined, weaponKey, weapon.effect)
+          }.bind(this));
+          
+
+          this.groupEnemies.forEach((enemy, enemyIndex) =>{
+            enemy.enemyBullets.forEach(function(bullet, bulletKey){
+                this.collision(this.player, bullet, undefined, bulletKey, "bullet-player", enemyIndex)
+              }.bind(this));
+              if (enemy.enemyBullets = enemy.enemyBullets.filter(function (bullet) {
+                return bullet.posX > 0;
+                  })){
+              }
+          })
+  
 
 
         this.framesCounter++;
@@ -87,11 +160,17 @@ var Game = {
       this.framesCounter = 0;
     }
 
-    if (this.framesCounter % 150 === 0) {
+    //todo: consider adding config variables to avoid values like 200
+    //   if (this.framesCounter % GameConfig.framesUpdateLimit === 0) { instead of    if (this.framesCounter % 200 === 0) {
+    if (this.framesCounter % 200 === 0) {
       this.createEnemy(1400, 700);
     }
 
-      
+    if (this.framesCounter % 100 === 0) {
+      this.createNewWeapon();
+
+    }
+
   
       },1000/this.fps)
   }
