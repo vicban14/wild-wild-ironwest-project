@@ -27,6 +27,13 @@ var Game = {
 
     this.repeat()
 
+    this.reset();
+
+  },
+
+  setCanvasDimensions: function() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
   },
 
   createEnemy: function(x,y) {
@@ -53,8 +60,15 @@ var Game = {
 
   drawEnemy: function (){
     this.groupEnemies.forEach(function(enemy, i) {
-      enemy.move()
-    })
+      enemy.move();
+      if (enemy.posX === 20){
+        this.player.counterLife--;
+        this.player.heart.frameIndex++;
+        if (this.player.counterLife === 0){
+          delete this.player;
+      }      
+      }
+    }.bind(this))
   },
 
   drawWeapons: function (){
@@ -65,6 +79,19 @@ var Game = {
 
   drawCounterLife: function (){
     this.player.drawLife()
+  },
+
+  checkEndGame: function (){
+    if (this.player.counterLife === 0){
+
+    }
+  },
+
+  gameOver: function (){
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+        var imgGameOver = new Image();
+        imgGameOver.src = "images/gameOver.png";
+        ctx.drawImage(imgGameOver, 0, 0, window.innerWidth, window.innerHeight);
   },
 
   // consider using object literals for strings that are used in several places or often
@@ -94,8 +121,7 @@ var Game = {
 
                 if (this.player.counterLife === 0){
                   delete this.player;
-              }
-            
+              }             
             } else {
               if (type === 0){
                 this.groupEnemies = [];
@@ -104,8 +130,11 @@ var Game = {
                 this.player.functionDrunk()
               }
               if (type === 2){
-                this.player.counterLife++;
-                this.player.heart.frameIndex--;
+                if (this.player.counterLife < 3){
+
+                  this.player.counterLife++;
+                  this.player.heart.frameIndex--;
+                }
               }
               if (type === 3){
                 this.scoreBoard.score += 10;
@@ -120,21 +149,22 @@ var Game = {
   
   
 
-  clearEnemies: function () {
-        this.groupEnemies = this.groupEnemies.filter(function (enemy) {
+  clearEnemies: function () {    
+    this.groupEnemies = this.groupEnemies.filter(function (enemy) {
           return enemy.posX > 0;
     });
 },
 
   clearBullets: function(){
     this.player.bullets = this.player.bullets.filter(function (bullet) {
-    return bullet.posX < 1600;
+    return bullet.posX < window.innerWidth;
       })
   },
 
   repeat: function (){
     var IntervalID = setInterval(()=>{
-      this.ctx.clearRect(0,0,1600,800);
+      this.setCanvasDimensions();
+      this.ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
         this.drawBackground();
         this.drawPlayer();
         this.drawEnemy();
@@ -142,7 +172,10 @@ var Game = {
         this.clearEnemies();
         this.clearBullets();
         this.drawCounterLife();
+        this.checkEndGame();
         this.scoreBoard.update(this.ctx)
+        
+        //collisions
         this.player.bullets.forEach(function(bullet, bulletKey) {
           this.groupEnemies.forEach(function(enemy, enemyKey){
             Game.collision(bullet, enemy, bulletKey, enemyKey, "bullet-enemy")
@@ -163,7 +196,6 @@ var Game = {
                   })){
               }
           })
-  
 
 
         this.framesCounter++;
@@ -175,7 +207,7 @@ var Game = {
     //todo: consider adding config variables to avoid values like 200
     //   if (this.framesCounter % GameConfig.framesUpdateLimit === 0) { instead of    if (this.framesCounter % 200 === 0) {
     if (this.framesCounter % 100 === 0) {
-      this.createEnemy(1400, 700);
+      this.createEnemy(window.innerWidth, 700);
     }
 
     if (this.framesCounter % 700 === 0) {
@@ -184,9 +216,12 @@ var Game = {
 
   
       },1000/this.fps)
-  }
+  },
 
+  
+  // reset: function () {
+  //   this.scoreBoard = ScoreBoard
+  //   this.framesCounter = 0;
+  // }
 
-};
-
-
+}

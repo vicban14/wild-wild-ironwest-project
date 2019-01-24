@@ -1,8 +1,8 @@
 //todo: avoid unused variables and/or parameters
 function Background(ctx) {
 
-  this.width = 1600,
-  this.height = 800,
+  this.width = window.innerWidth,
+  this.height = window.innerHeight,
   this.posX = 0,
   this.posY = 0,
 

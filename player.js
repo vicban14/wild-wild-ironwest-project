@@ -19,7 +19,6 @@ function Player(ctx) {
   this.playerImg.src = ("img/vaquero1.png");
 
   this.drunk = false;
-  this.doubleVelocity = false;
 
   this.counterLife = 3;
   
@@ -36,7 +35,6 @@ function Player(ctx) {
       bullet.draw();
       bullet.move();
     });
-    console.log(this.drawLife)
     this.drawLife();
     
   }
@@ -150,31 +148,6 @@ function Player(ctx) {
         break;
       }
     }.bind(this)
-
-  // Player.prototype.setListener = function(){
-  //   document.onkeydown = function(e) {
-  //     switch(e.keyCode){
-  //       case 38:
-  //         this.moveUp();
-  //       break;
-
-  //       case 40:
-  //         this.moveDown();
-  //       break;
-
-  //       case 32:
-  //       this.shoot();
-  //       break;
-
-  //       case 39:
-  //       this.moveRight();
-  //       break;
-
-  //       case 37:
-  //         this.moveLeft();
-  //       break;
-  //     }
-  //   }.bind(this)
 
 
   Player.prototype.shoot = function(){

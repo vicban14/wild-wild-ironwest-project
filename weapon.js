@@ -16,10 +16,9 @@ function Weapon(ctx) {
 Weapon.prototype.chooseImageWeapon = function() {
 
   this.effect = Math.floor(Math.random() * 4)
-  console.log(this.effect)
 
   if (this.effect === 0) {
-    this.weaponImg.src = "img/clipart1815275.png"
+    this.weaponImg.src = "img/tnt.png"
   } else if (this.effect === 1){
     this.weaponImg.src = "img/whiskey-bottle2.png"
     this.width = 35;
