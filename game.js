@@ -79,10 +79,10 @@ var Game = {
   },
 
   drawEnemy: function (){
-    this.groupEnemies.forEach(function(enemy, i) {
+    this.groupEnemies.forEach(function(enemy) {
       enemy.move();
-      if (enemy.posX === 20){
-        this.player.counterLife--;
+      if (enemy.posX === 0){
+        this.player.counterLife -= 1;
         this.player.heart.frameIndex++;     
       }
     }.bind(this))
@@ -144,9 +144,7 @@ var Game = {
               this.screamDeath.play();
               
 
-              //   if (this.player.counterLife === 0){
-              //     delete this.player;
-              // }             
+                          
             } else {
               if (type === 0){
                 this.groupEnemies = [];
