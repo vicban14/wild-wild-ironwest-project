@@ -22,7 +22,6 @@ var Game = {
 
   start: function (canvadId) {
 
-  
     this.canvas = document.getElementById(canvadId);
     this.ctx = this.canvas.getContext("2d");
     this.fps = 60;
@@ -131,7 +130,7 @@ var Game = {
             if (type === "bullet-enemy"){
               this.player.bullets.splice(keyarg1, 1);
               this.groupEnemies.splice(keyarg2, 1);
-              this.victorySong = new Audio("audio/victory.mp3");
+              this.victorySong = new Audio("audio/allright.mp3");
               this.victorySong.play();
               this.scoreBoard.score++
               
@@ -256,11 +255,11 @@ var Game = {
       this.createEnemy(window.innerWidth, 700);
     }
 
-    if (this.framesCounter % 700 === 0) {
+    if (this.framesCounter % 300 === 0) {
       this.createNewWeapon();
     }
 
-    if (this.framesCounter % 5000 === 0) {
+    if (this.framesCounter % 400 === 0) {
       this.randomSong = new Audio("audio/hay-una-serpiente-en-mi-bota.mp3");
       this.randomSong.play();
     }
