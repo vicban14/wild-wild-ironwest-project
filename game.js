@@ -1,4 +1,5 @@
 var Game = {
+
   canvas: undefined,
   ctx: undefined,
   fps: 60,
@@ -9,25 +10,45 @@ var Game = {
   framesCounter: 0,
   weapon: undefined,
   groupWeapons: [],
+  stopGame: false,
+  initialGame: true,
+  imgStart: new Image(),
+  imgGameOver: new Image(),
+  intervalID: undefined,
+  
+  
+  
 
 
   start: function (canvadId) {
 
+  
     this.canvas = document.getElementById(canvadId);
     this.ctx = this.canvas.getContext("2d");
     this.fps = 60;
-
-    this.player = new Player(this.ctx);
-
+    this.setCanvasDimensions();
+    this.player = new Player(this);
+    this.imgGameOver.src = "./img/game-over.png";
+    this.imgStart.src = "./img/initial-scene.png";
     this.createBackground();
     this.createNewWeapon();
 
-    // this.score += 10
 
 
     this.repeat()
 
-    this.reset();
+
+  },
+
+  reset: function () {
+
+    this.groupEnemies = [];
+    this.groupWeapons = [];
+    this.player = new Player(this);
+    this.scoreBoard.score = 0;
+    
+
+    this.start()
 
   },
 
@@ -63,10 +84,7 @@ var Game = {
       enemy.move();
       if (enemy.posX === 20){
         this.player.counterLife--;
-        this.player.heart.frameIndex++;
-        if (this.player.counterLife === 0){
-          delete this.player;
-      }      
+        this.player.heart.frameIndex++;     
       }
     }.bind(this))
   },
@@ -81,17 +99,18 @@ var Game = {
     this.player.drawLife()
   },
 
-  checkEndGame: function (){
+  gameOver: function (){
     if (this.player.counterLife === 0){
 
+        this.ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+        this.ctx.drawImage(this.imgGameOver, 0, 0, window.innerWidth, window.innerHeight);
+        this.deadSong = new Audio("audio/dead.mp3");
+        this.deadSong.play();
+        this.gameSong.pause();
+        this.stopGame = true;
+        clearInterval(this.intervalID)
+        this.reset();
     }
-  },
-
-  gameOver: function (){
-    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
-        var imgGameOver = new Image();
-        imgGameOver.src = "images/gameOver.png";
-        ctx.drawImage(imgGameOver, 0, 0, window.innerWidth, window.innerHeight);
   },
 
   // consider using object literals for strings that are used in several places or often
@@ -112,24 +131,37 @@ var Game = {
             if (type === "bullet-enemy"){
               this.player.bullets.splice(keyarg1, 1);
               this.groupEnemies.splice(keyarg2, 1);
+              this.victorySong = new Audio("audio/victory.mp3");
+              this.victorySong.play();
               this.scoreBoard.score++
+              
 
             } else if (type === "bullet-player"){
               this.groupEnemies[index].enemyBullets.splice(keyarg2, 1);
               this.player.counterLife--;
               this.player.heart.frameIndex++;
+              
+              this.screamDeath = new Audio ("audio/grito-wilhelm.mp3"),
+              this.screamDeath.play();
+              
 
-                if (this.player.counterLife === 0){
-                  delete this.player;
-              }             
+              //   if (this.player.counterLife === 0){
+              //     delete this.player;
+              // }             
             } else {
               if (type === 0){
                 this.groupEnemies = [];
+                this.explosionSong = new Audio("audio/Explosion+2.mp3");
+                this.explosionSong.play();
               }
               if (type === 1){
                 this.player.functionDrunk()
+                this.drunkSong = new Audio("audio/eructo_de_barney_gumble.mp3");
+                this.drunkSong.play();
               }
               if (type === 2){
+                this.healthSong = new Audio("audio/Hans Topo - Dabuten colegas.mp3");
+                this.healthSong.play();
                 if (this.player.counterLife < 3){
 
                   this.player.counterLife++;
@@ -137,6 +169,8 @@ var Game = {
                 }
               }
               if (type === 3){
+                this.moneySong = new Audio("audio/coin.wav");
+                this.moneySong.play();
                 this.scoreBoard.score += 10;
               }
               this.groupWeapons.splice(keyarg2, 1)
@@ -162,9 +196,16 @@ var Game = {
   },
 
   repeat: function (){
-    var IntervalID = setInterval(()=>{
-      this.setCanvasDimensions();
+    this.intervalID = setInterval(()=>{
+
       this.ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+
+      if (this.initialGame) {
+        this.ctx.drawImage(this.imgStart, 0, 0, window.innerWidth, window.innerHeight);
+      } else {
+
+        this.ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+
         this.drawBackground();
         this.drawPlayer();
         this.drawEnemy();
@@ -172,7 +213,7 @@ var Game = {
         this.clearEnemies();
         this.clearBullets();
         this.drawCounterLife();
-        this.checkEndGame();
+
         this.scoreBoard.update(this.ctx)
         
         //collisions
@@ -200,8 +241,13 @@ var Game = {
 
         this.framesCounter++;
 
-    if (this.framesCounter > 10000) {
+    if (this.framesCounter > 30000) {
       this.framesCounter = 0;
+    }
+
+    if (this.framesCounter === 1){
+      this.gameSong = new Audio("audio/TOY STORY HAY UN AMIGO EN MÍ (CANCIÓN ORIGINAL ESPAÑOL) CON LETRA.mp3");
+      this.gameSong.play();
     }
 
     //todo: consider adding config variables to avoid values like 200
@@ -214,6 +260,15 @@ var Game = {
       this.createNewWeapon();
     }
 
+    if (this.framesCounter % 5000 === 0) {
+      this.randomSong = new Audio("audio/hay-una-serpiente-en-mi-bota.mp3");
+      this.randomSong.play();
+    }
+
+    this.gameOver();
+
+
+      }
   
       },1000/this.fps)
   },

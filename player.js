@@ -1,5 +1,5 @@
 //todo: avoid unused variables and/or parameters
-function Player(ctx) {
+function Player(game) {
 
   this.width = 100,
   this.height = 120,
@@ -7,7 +7,7 @@ function Player(ctx) {
   this.posY = 410,
   this.posX = 20,
   
-  this.ctx = ctx,
+  this.game = game,
 
   this.vel = [];
   
@@ -29,7 +29,7 @@ function Player(ctx) {
 };
   
   Player.prototype.draw = function() {
-    this.ctx.drawImage(this.playerImg, this.posX, this.posY, this.width, this.height);
+    this.game.ctx.drawImage(this.playerImg, this.posX, this.posY, this.width, this.height);
   
     this.bullets.forEach(function(bullet) {
       bullet.draw();
@@ -40,7 +40,7 @@ function Player(ctx) {
   }
 
   Player.prototype.drawLife = function(){
-    this.ctx.drawImage(
+    this.game.ctx.drawImage(
       this.heart,
       0,
       this.heart.frameIndex * Math.floor(this.heart.height / this.heart.frames),
@@ -131,6 +131,15 @@ function Player(ctx) {
         this.shoot();
         break;
 
+        case 13:
+        this.game.initialGame = false;
+        if (this.game.stopGame) {
+          this.game.ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+          this.game.repeat();
+          this.game.stopGame = false;
+        }
+        break;
+      
         case 39:
         if (!this.drunk) {
           this.moveRight();
@@ -151,8 +160,10 @@ function Player(ctx) {
 
 
   Player.prototype.shoot = function(){
-    var bullet = new Bullet(this.ctx, this.posX + this.width, this.posY + this.height / 2);
+    var bullet = new Bullet(this.game.ctx, this.posX + this.width, this.posY + this.height / 2);
     this.bullets.push(bullet);
+    this.shootSong = new Audio("audio/Gun+357+Magnum.mp3");
+    this.shootSong.play();
   }
 
   }

@@ -30,6 +30,8 @@ Enemy.prototype.draw = function() {
   
   if (this.frames % 110 === 0) {
     this.enemyBullets.push(enemyBullet);
+    this.shootSong = new Audio("audio/Gun+357+Magnum.mp3");
+    this.shootSong.play();
   }
 
   this.enemyBullets.forEach(function(enemyBullet) {
