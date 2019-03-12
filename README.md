@@ -12,7 +12,7 @@ El salvaje oeste te espera.
 
 Utiliza las flechas del teclado para moverte y esquivar las balas. También puedes recoger una serie de powerups.
 - Corazones: Añaden una vida al personaje, hasta un máximo de 3.
-- Monedas: Sube tu escore en 10.
+- Monedas: Sube tu score en 10.
 - Whisky: Invierte los controles del personaje, más que una ayuda es un obstáculo.
 - Dinamita: acaba con todos los enemigos que hay en pantalla.
 
