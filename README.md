@@ -22,5 +22,5 @@ Conseguir las colisiones y sus combinaciones.
 
 ## Enlace
 
-[Pulsar aquí](https://github.com/vicban14/wild-wild-ironwest-project)
+[Pulsar aquí](https://vicban14.github.io/wild-wild-ironwest-project/)
 
